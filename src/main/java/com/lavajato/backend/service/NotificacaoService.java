@@ -1,5 +1,5 @@
 package com.lavajato.backend.service;
 
-public class JsonService {
+public class NotificacaoService {
     
 }
