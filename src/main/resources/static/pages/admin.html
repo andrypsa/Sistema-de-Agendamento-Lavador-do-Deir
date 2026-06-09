@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Administração - Lavador do Deir</title>
+
+    <link rel="stylesheet" href="../css/style.css">
+</head>
+
+<body>
+
+    <div class="container">
+
+        <!-- Títulos principais de identificação da página !-->
+        <h1>Lavador do Deir</h1>
+        <h2>Painel Administrativo</h2>
+
+        <!--Bloco que agrupa os dados do cliente e do veículo !-->
+        <div class="historico-item">
+
+            <p><strong>Cliente:</strong> João Silva</p>
+            <p><strong>Veículo:</strong> Gol</p>
+            <p><strong>Data:</strong> 15/06/2026</p>
+            <p><strong>Horário:</strong> 08:00</p>
+            
+            <!--Sub-bloco com os botões de ação alinhados lado a lado !-->
+            <div class="botoes-acoes">
+                <button class="btn-aprovar">Aprovar</button>
+                <button class="btn-recusar">Recusar</button>
+            </div>
+
+        </div>
+
+        <br>
+
+        <!-- Campo de entrada de texto para digitar o motivo da recusa !-->
+        <label for="justificativa">
+            Justificativa da Recusa
+        </label>
+
+        <textarea id="justificativa" rows="4" placeholder="Informe o motivo da recusa">
+        </textarea>
+
+        <!--Botão final para salvar e enviar a justificativa técnica !-->
+        <button>
+            Salvar Justificativa
+        </button>
+
+    </div>
+
+</body>
+
+</html>

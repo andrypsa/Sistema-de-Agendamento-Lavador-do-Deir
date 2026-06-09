@@ -1,0 +1,1 @@
+console.log("Sistema Lavador do Deir iniciado.");

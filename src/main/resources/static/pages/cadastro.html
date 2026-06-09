@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lavador do Deir - Cadastro</title>
+
+    <link rel="stylesheet" href="../css/style.css">
+</head>
+
+<body>
+
+    <!--  Caixa principal que centraliza o formulário de cadastro na tela -->
+    <div class="container">
+
+        <h1>Lavador do Deir</h1>
+
+        <h2>Criar Conta</h2>
+
+        <!-- Formulário para capturar os dados do novo usuário -->
+        <form id="formCadastro">
+
+            <input
+                type="text"
+                id="nome"
+                placeholder="Nome completo"
+                required>
+
+            <input
+                type="text"
+                id="telefone"
+                placeholder="Telefone"
+                required>
+
+            <input
+                type="email"
+                id="email"
+                placeholder="E-mail"
+                required>
+
+            <!-- Campo com caracteres ocultos para digitação segura da senha -->
+            <input
+                type="password"
+                id="senha"
+                placeholder="Senha"
+                required>
+
+            <!-- Botão para enviar o envio dos dados do formulário -->
+            <button type="submit">
+                Criar Conta
+            </button>
+
+        </form>
+
+        <!-- Link de navegação direcionando para a página de login existente -->
+        <a href="login.html">
+            Já possui conta? Entrar
+        </a>
+
+    </div>
+
+    <footer class="rodape">
+        <p>Lavagem automotiva.</p>
+        <p>Lavamos tapetes, carpetes e estofados.</p>
+        <p>Para outros serviços e orçamentos, entre em contato conosco.</p>
+    </footer>
+
+    <!-- Explicação: Importação do arquivo de script externo para gerenciar a lógica de cadastro -->
+    <script src="../js/app.js"></script>
+
+</body>
+
+</html>
