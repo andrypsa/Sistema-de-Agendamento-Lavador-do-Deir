@@ -11,34 +11,39 @@
 
 <body>
 
-    <div class="container">
+    <div class="page-content">
 
-        <h1>Lavador do Deir</h1>
+        <div class="page-title-card">
+            <h1>Lavador do Deir</h1>
+        </div>
 
-        <h2>Login</h2>
+        <div class="container">
 
-        <!-- Formulário estruturado para capturar as credenciais de acesso do usuário -->
-        <form id="formLogin">
+            <h2>Login</h2>
 
-            <input type="email" id="email" placeholder="E-mail" required>
-            <input type="password" id="senha" placeholder="Senha" required>
-            <button type="submit">
-                Entrar
-            </button>
+            <!-- Formulário estruturado para capturar as credenciais de acesso do usuário -->
+            <form id="formLogin">
 
-        </form>
+                <input type="email" id="email" placeholder="E-mail" required>
+                <input type="password" id="senha" placeholder="Senha" required>
+                <button type="submit">
+                    Entrar
+                </button>
 
-        <!-- Link de navegação para redirecionar novos usuários à tela de registro -->
-        <a href="cadastro.html">
-            Criar conta
-        </a>
+            </form>
+
+            <!-- Link de navegação para redirecionar novos usuários à tela de registro -->
+            <div style="display:flex;flex-direction:column;gap:10px;margin-top:8px;">
+                <a href="cadastro.html">Criar conta</a>
+                <button id="btnAcessoAdm"
+                    style="padding:4px 8px;font-size:0.85rem;max-width:120px;cursor:pointer;align-self:flex-end;">Acesso
+                    ADM</button>
+            </div>
+
+        </div>
 
     </div>
-
     <footer class="rodape">
-
-        <p>Praticidade para você, cuidado para o seu veículo.</p>
-        <p>Cadastre-se e experimente a comodidade de um serviço de lavagem de carros eficiente e confiável.</p>
         <p>Lavador do Deir, a escolha certa para manter seu veículo sempre limpo e brilhando!</p>
     </footer>
 

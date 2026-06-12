@@ -11,83 +11,93 @@
 </head>
 
 <body>
-    <div class="container">
-        <h1>Lavador do Deir</h1>
-        <h2>Agendar Lavada</h2>
-        
-        <!-- Formulário para capturar os dados do veículo e da lavagem -->
-        <form id="formAgendamento">
-            
-            <!-- Seleção do tipo de veículo e características -->
-            <select id="tipoVeiculo" required>
-                <option value="">Selecione o veículo</option>
-                <option>Bicicleta</option>
-                <option>Moto</option>
-                <option>Carro</option>
-                <option>Caminhonete</option>
-                <option>Caminhão</option>
-                <option>Máquina Agrícola</option>
-                <option>Outros - descreva em observações</option>
-            </select>
+    <div class="page-content">
 
-            <input type="text" id="marca" placeholder="Marca">
-            <input type="text" id="modelo" placeholder="Modelo">
+        <div class="page-title-card">
+            <h1>Lavador do Deir</h1>
+        </div>
 
-            <!-- Menu de seleção para classificar o estado de sujeira do veículo -->
-            <select id="nivelSujeira" required>
-                <option value="">Nível de sujeira</option>
-                <option>Baixo</option>
-                <option>Médio</option>
-                <option>Alto</option>
-            </select>
+        <div class="container">
+            <h2>Agendar Lavada</h2>
 
-            <!-- Seção de escolha da data pretendida para o serviço -->
-            <div class="campo-data">
-                <label for="data">Data de agendamento</label>
-                <input type="date" id="data" required>
-            </div>
+            <!-- Formulário para capturar os dados do veículo e da lavagem -->
+            <form id="formAgendamento">
 
-            <!-- Menu com a listagem dos horários disponíveis para atendimento -->
-            <label for="hora">Horário de agendamento</label>
-            <select id="hora" required>
-                <option value="">Selecione o horário</option>
-                <option value="07:00">07:00</option>
-                <option value="07:30">07:30</option>
-                <option value="08:00">08:00</option>
-                <option value="08:30">08:30</option>
-                <option value="09:00">09:00</option>
-                <option value="09:30">09:30</option>
-                <option value="10:00">10:00</option>
-                <option value="10:30">10:30</option>
-                <option value="11:00">11:00</option>
-                <option value="13:00">13:00</option>
-                <option value="13:30">13:30</option>
-                <option value="14:00">14:00</option>
-                <option value="14:30">14:30</option>
-                <option value="15:00">15:00</option>
-                <option value="15:30">15:30</option>
-                <option value="16:00">16:00</option>
-                <option value="16:30">16:30</option>
-            </select>
-            
-            <!-- Caixa de texto opcional para observações-->
-            <label for="observacao">Observações adicionais</label>
+                <!-- Seleção do tipo de veículo e características -->
+                <select id="tipoVeiculo" required>
+                    <option value="">Selecione o veículo</option>
+                    <option>Bicicleta</option>
+                    <option>Moto</option>
+                    <option>Carro</option>
+                    <option>Caminhonete</option>
+                    <option>Caminhão</option>
+                    <option>Máquina Agrícola</option>
+                    <option>Outros - descreva em observações</option>
+                </select>
 
-            <textarea id="observacao" rows="4" placeholder="">
-</textarea>
+                <input type="text" id="marca" placeholder="Marca">
+                <input type="text" id="modelo" placeholder="Modelo">
 
-            <!-- Botão de envio para enviar os dados preenchidos no formulário -->
-            <button type="submit">
-                Solicitar Agendamento
-            </button>
+                <!-- Menu de seleção para classificar o estado de sujeira do veículo -->
+                <select id="nivelSujeira" required>
+                    <option value="">Nível de sujeira</option>
+                    <option>Baixo</option>
+                    <option>Médio</option>
+                    <option>Alto</option>
+                </select>
 
-        </form>
-        <br>
+                <!-- Seção de escolha da data pretendida para o serviço -->
+                <div class="campo-data">
+                    <label for="data">Data de agendamento</label>
+                    <input type="date" id="data" required>
+                </div>
 
-        <!-- Link de navegação para retornar à tela do painel geral -->
-        <a href="dashboard.html">
-            Voltar ao Dashboard
-        </a>
+                <!-- Menu com a listagem dos horários disponíveis para atendimento -->
+                <label for="hora">Horário de agendamento</label>
+                <select id="hora" required>
+                    <option value="">Selecione o horário</option>
+                    <option value="07:00">07:00</option>
+                    <option value="07:30">07:30</option>
+                    <option value="08:00">08:00</option>
+                    <option value="08:30">08:30</option>
+                    <option value="09:00">09:00</option>
+                    <option value="09:30">09:30</option>
+                    <option value="10:00">10:00</option>
+                    <option value="10:30">10:30</option>
+                    <option value="11:00">11:00</option>
+                    <option value="13:00">13:00</option>
+                    <option value="13:30">13:30</option>
+                    <option value="14:00">14:00</option>
+                    <option value="14:30">14:30</option>
+                    <option value="15:00">15:00</option>
+                    <option value="15:30">15:30</option>
+                    <option value="16:00">16:00</option>
+                    <option value="16:30">16:30</option>
+                </select>
+
+                <!-- Caixa de texto opcional para observações-->
+                <label for="observacao">Observações adicionais</label>
+
+                <textarea id="observacao" rows="4" placeholder=""></textarea>
+
+                <p class="aviso-valores">
+                    Os valores serão informados após avaliação do veículo. Para avaliação antes do agendamento, entre em
+                    contato pelo WhatsApp.
+                </p>
+
+                <!-- Botão de envio para enviar os dados preenchidos no formulário -->
+                <button type="submit">
+                    Solicitar Agendamento
+                </button>
+            </form>
+            <br>
+
+            <!-- Link de navegação para retornar à tela do painel geral -->
+            <a href="dashboard.html">
+                Voltar ao Dashboard
+            </a>
+
+        </div>
 
     </div>
 
@@ -98,7 +108,7 @@
 
         const hoje = new Date();
         const ano = hoje.getFullYear();
-        const mes = String(hoje.getMonth() + 1).padStart(2, '0'); 
+        const mes = String(hoje.getMonth() + 1).padStart(2, '0');
         const dia = String(hoje.getDate()).padStart(2, '0');
         const dataMinima = `${ano}-${mes}-${dia}`;
         campoData.min = dataMinima;
@@ -111,16 +121,75 @@
             }
         });
 
-        <!-- Controle do envio dos dados com alertas e redirecionamento de página -->
-        form.addEventListener('submit', function (event) {
+        // Controle do envio dos dados com alertas e redirecionamento de página
+        form.addEventListener('submit', async function (event) {
+
             event.preventDefault();
-            alert('Solicitação de agendamento enviada!');
 
-            form.reset();
-            window.location.href = "dashboard.html";
+            const usuarioLogado = JSON.parse(sessionStorage.getItem("user"));
+
+            if (!usuarioLogado || !usuarioLogado.id) {
+                alert("Você precisa estar logado para solicitar um agendamento.");
+                window.location.href = "login.html";
+                return;
+            }
+
+            const agendamento = {
+
+                clienteId: usuarioLogado.id,
+
+                tipoVeiculo: document.getElementById("tipoVeiculo").value,
+
+                marca: document.getElementById("marca").value,
+
+                modelo: document.getElementById("modelo").value,
+
+                nivelSujeira: document.getElementById("nivelSujeira").value,
+
+                data: document.getElementById("data").value,
+
+                horaInicio: document.getElementById("hora").value,
+
+                status: "PENDENTE",
+
+                observacao: document.getElementById("observacao").value,
+
+                justificativa: ""
+
+            };
+
+            try {
+
+                const resposta = await fetch("http://localhost:8080/agendamentos", {
+
+                    method: "POST",
+
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+
+                    body: JSON.stringify(agendamento)
+
+                });
+
+                const mensagem = await resposta.text();
+
+                alert(mensagem);
+
+                if (mensagem.includes("sucesso")) {
+                    form.reset();
+                    window.location.href = "dashboard.html";
+                }
+
+            } catch (erro) {
+
+                alert("Erro ao enviar o agendamento.");
+
+                console.log(erro);
+
+            }
+
         });
-    </script>
-
     </script>
 
 </body>

@@ -1,6 +1,7 @@
 package com.lavajato.backend.controller;
 
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -25,22 +26,31 @@ public class ClienteController {
     }
 
     @PostMapping("/cadastrar")
-    public String cadastrar(@RequestBody Cliente cliente) {
+    public String cadastrar(@RequestBody Map<String, String> dados) {
 
         try {
+            Cliente cliente = new Cliente();
+
+            cliente.setNome(dados.get("nome"));
+            cliente.setTelefone(dados.get("telefone"));
+            cliente.setEmail(dados.get("email"));
+            cliente.setSenha(dados.get("senha"));
+
             service.cadastrar(cliente);
+
             return "Cliente cadastrado com sucesso!";
+
         } catch (Exception e) {
             return e.getMessage();
         }
     }
 
     @PostMapping("/login")
-    public Cliente login(@RequestBody Cliente cliente) {
+    public Cliente login(@RequestBody Map<String, String> dados) {
 
-        return service.login(
-                cliente.getEmail(),
-                cliente.getSenha()
-        );
+        String email = dados.get("email");
+        String senha = dados.get("senha");
+
+        return service.login(email, senha);
     }
 }

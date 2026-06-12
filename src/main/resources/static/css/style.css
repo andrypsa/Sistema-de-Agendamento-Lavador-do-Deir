@@ -1,3 +1,6 @@
+/*======================================
+            RESET GERAL
+======================================*/
 * {
     margin: 0;
     padding: 0;
@@ -5,6 +8,9 @@
     font-family: Arial, Helvetica, sans-serif;
 }
 
+/*======================================
+                BODY
+======================================*/
 body {
     background-image: url("../img/fundo-lavajato.png.png");
     background-size: cover;
@@ -13,61 +19,126 @@ body {
     min-height: 100vh;
     display: flex;
     flex-direction: column;
+    align-items: center;
+    overflow-x: hidden;
+    padding: 40px 0;
+}
+
+.page-content {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
     justify-content: center;
     align-items: center;
-    overflow: hidden;
+    width: 100%;
 }
 
+.page-title-card {
+    width: 340px;
+    max-width: calc(100vw - 30px);
+    margin: 0 auto 10px auto;
+    background: rgba(255, 255, 255, 0.95);
+    border-radius: 14px;
+    padding: 14px 16px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.14);
+    text-align: center;
+}
+
+.page-title-card h1 {
+    margin: 0;
+    font-size: 22px;
+    line-height: 1.2;
+}
+
+/*======================================
+             CONTAINER
+======================================*/
 .container {
-    width: 380px;
-    margin: 100px auto;
-    background: rgba(255, 255, 255, 0.92);
+    width: 340px;
+    max-width: calc(100vw - 30px);
+    margin: 0 auto 10px auto;
+    background: rgba(255, 255, 255, 0.94);
     backdrop-filter: blur(5px);
-    padding: 35px;
-    border-radius: 12px;
-    box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
-    margin-bottom: 30px;
+    padding: 14px;
+    border-radius: 10px;
+    box-shadow: 0 0 12px rgba(0, 0, 0, 0.18);
 }
 
+/*======================================
+              TÍTULOS
+======================================*/
 h1 {
     text-align: center;
-    margin-bottom: 10px;
+    margin-bottom: 6px;
+    font-size: 22px;
 }
 
 h2 {
     text-align: center;
-    margin-bottom: 20px;
+    margin-bottom: 10px;
+    font-size: 18px;
 }
 
-input {
+h3 {
+    text-align: center;
+    margin-bottom: 10px;
+    font-size: 17px;
+}
+
+#listaAgendamentos p {
+    text-align: center;
+}
+
+.container form {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+/*======================================
+        CAMPOS DE ENTRADA
+======================================*/
+input,
+select,
+textarea {
     width: 100%;
-    padding: 12px;
-    margin-top: 5px;
-    margin-bottom: 15px;
+    padding: 9px 10px;
+    margin-top: 4px;
+    margin-bottom: 8px;
     border: 1px solid #ccc;
     border-radius: 6px;
+    font-size: 14px;
 }
 
+textarea {
+    min-height: 90px;
+    resize: vertical;
+}
+
+/*======================================
+               BOTÕES
+======================================*/
 button {
     width: 100%;
-    padding: 12px;
+    padding: 10px;
     border: none;
     border-radius: 6px;
     cursor: pointer;
     background: #1e3a5f;
     color: white;
     font-weight: bold;
-    font-size: 16px;
+    font-size: 15px;
 }
 
 button:hover {
     opacity: 0.9;
+    transition: 0.3s;
 }
 
 .botoes-acoes {
     display: flex;
-    gap: 10px;
-    margin-top: 15px;
+    gap: 8px;
+    margin-top: 10px;
 }
 
 .botoes-acoes button {
@@ -83,6 +154,9 @@ button:hover {
     background-color: #e71d36;
 }
 
+/*======================================
+                LINKS
+======================================*/
 a {
     display: block;
     text-align: center;
@@ -99,30 +173,26 @@ p {
     font-size: 16px;
 }
 
-select,
-textarea {
-    width: 100%;
-    padding: 12px;
-    margin-top: 5px;
-    margin-bottom: 15px;
-    border: 1px solid #ccc;
-    border-radius: 6px;
-}
-
+/*======================================
+               LABELS
+======================================*/
 label {
     display: block;
-    margin-top: 10px;
-    margin-bottom: 15px;
-    font-size: 11px;
+    margin-top: 6px;
+    margin-bottom: 4px;
+    font-size: 12px;
     font-weight: 600;
-    color: #777;
+    color: #555;
     text-transform: uppercase;
 }
 
 .campo-data {
-    margin-top: 10px;
+    margin-top: 8px;
 }
 
+/*======================================
+        CARDS / HISTÓRICO
+======================================*/
 .historico-item {
     border: 1px solid #ddd;
     border-radius: 8px;
@@ -134,13 +204,20 @@ label {
 }
 
 .historico-item p {
-    margin: 8px 0;
+    margin: 6px 0;
 }
 
-.historico-item p {
-    margin-bottom: 5px;
+.aviso-valores {
+    font-size: 12px;
+    color: #555;
+    text-align: center;
+    line-height: 1.4;
+    margin: 6px 0 12px 0;
 }
 
+/*======================================
+               RODAPÉ
+======================================*/
 .rodape {
     color: white;
     text-align: center;

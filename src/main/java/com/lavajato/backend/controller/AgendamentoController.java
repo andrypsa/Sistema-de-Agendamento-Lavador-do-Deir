@@ -1,10 +1,13 @@
 package com.lavajato.backend.controller;
 
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -27,8 +30,26 @@ public class AgendamentoController {
     @PostMapping
     public String cadastrar(@RequestBody Agendamento agendamento) {
 
-        service.cadastrar(agendamento);
+        try {
+            service.cadastrar(agendamento);
+            return "Agendamento realizado com sucesso!";
+        } catch (Exception e) {
+            return e.getMessage();
+        }
+    }
 
-        return "Agendamento realizado com sucesso!";
+    @PutMapping("/{id}/decisao")
+    public String atualizarDecisao(@PathVariable Long id, @RequestBody Map<String, String> dados) {
+
+        String status = dados.get("status");
+        String justificativa = dados.get("justificativa");
+
+        boolean atualizado = service.atualizarDecisao(id, status, justificativa);
+
+        if (atualizado) {
+            return "Decisão salva com sucesso!";
+        }
+
+        return "Agendamento não encontrado.";
     }
 }

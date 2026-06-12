@@ -1,1 +1,61 @@
-[]
+[ {
+  "id" : 1,
+  "clienteId" : 1,
+  "tipoVeiculo" : "Caminhonete",
+  "marca" : "",
+  "modelo" : "S10",
+  "nivelSujeira" : "Alto",
+  "data" : "2026-06-15",
+  "horaInicio" : "08:00",
+  "status" : "APROVADO",
+  "observacao" : "",
+  "justificativa" : ""
+}, {
+  "id" : 2,
+  "clienteId" : 2,
+  "tipoVeiculo" : "Carro",
+  "marca" : "Mercedes",
+  "modelo" : "AMG",
+  "nivelSujeira" : "Baixo",
+  "data" : "2026-06-18",
+  "horaInicio" : "08:30",
+  "status" : "APROVADO",
+  "observacao" : "",
+  "justificativa" : ""
+}, {
+  "id" : 3,
+  "clienteId" : 3,
+  "tipoVeiculo" : "Moto",
+  "marca" : "Biz",
+  "modelo" : "",
+  "nivelSujeira" : "Médio",
+  "data" : "2026-06-12",
+  "horaInicio" : "13:00",
+  "status" : "APROVADO",
+  "observacao" : "",
+  "justificativa" : ""
+}, {
+  "id" : 4,
+  "clienteId" : 2,
+  "tipoVeiculo" : "Máquina Agrícola",
+  "marca" : "JhonDere",
+  "modelo" : "Trator",
+  "nivelSujeira" : "Alto",
+  "data" : "2026-06-13",
+  "horaInicio" : "16:30",
+  "status" : "RECUSADO",
+  "observacao" : "",
+  "justificativa" : "Horário indisponível."
+}, {
+  "id" : 5,
+  "clienteId" : 4,
+  "tipoVeiculo" : "Caminhonete",
+  "marca" : "",
+  "modelo" : "Hilux",
+  "nivelSujeira" : "Médio",
+  "data" : "2026-06-18",
+  "horaInicio" : "13:30",
+  "status" : "PENDENTE",
+  "observacao" : "",
+  "justificativa" : ""
+} ]

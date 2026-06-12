@@ -11,44 +11,215 @@
 
 <body>
 
-    <div class="container">
+    <div class="page-content">
 
-        <!-- Títulos principais de identificação da página !-->
-        <h1>Lavador do Deir</h1>
-        <h2>Painel Administrativo</h2>
+        <div class="page-title-card">
+            <h1>Lavador do Deir</h1>
+        </div>
 
-        <!--Bloco que agrupa os dados do cliente e do veículo !-->
-        <div class="historico-item">
+        <div class="container">
 
-            <p><strong>Cliente:</strong> João Silva</p>
-            <p><strong>Veículo:</strong> Gol</p>
-            <p><strong>Data:</strong> 15/06/2026</p>
-            <p><strong>Horário:</strong> 08:00</p>
-            
-            <!--Sub-bloco com os botões de ação alinhados lado a lado !-->
+            <h2>Painel Administrativo</h2>
+
             <div class="botoes-acoes">
-                <button class="btn-aprovar">Aprovar</button>
-                <button class="btn-recusar">Recusar</button>
+                <button onclick="filtrarAgendamentos('PENDENTE')">
+                    Pendentes
+                </button>
+
+                <button onclick="filtrarAgendamentos('APROVADO')">
+                    Aceitos
+                </button>
+
+                <button onclick="filtrarAgendamentos('RECUSADO')">
+                    Recusados
+                </button>
             </div>
+
+            <div id="listaAgendamentosAdmin">
+                <p>Carregando solicitações...</p>
+            </div>
+
+            <br>
+
+            <button onclick="sair()">
+                Sair
+            </button>
 
         </div>
 
-        <br>
-
-        <!-- Campo de entrada de texto para digitar o motivo da recusa !-->
-        <label for="justificativa">
-            Justificativa da Recusa
-        </label>
-
-        <textarea id="justificativa" rows="4" placeholder="Informe o motivo da recusa">
-        </textarea>
-
-        <!--Botão final para salvar e enviar a justificativa técnica !-->
-        <button>
-            Salvar Justificativa
-        </button>
-
     </div>
+
+    <script>
+        let todosAgendamentos = [];
+        let todosClientes = [];
+        let filtroAtual = "PENDENTE";
+
+        (function () {
+            const role = sessionStorage.getItem("role");
+
+            if (role !== "admin") {
+                alert("Acesso restrito. Faça login como administrador.");
+                window.location.href = "login.html";
+            }
+        })();
+
+        async function carregarAgendamentosAdmin() {
+
+            try {
+
+                const respostaAgendamentos = await fetch("http://localhost:8080/agendamentos");
+                todosAgendamentos = await respostaAgendamentos.json();
+
+                const respostaClientes = await fetch("http://localhost:8080/clientes");
+                todosClientes = await respostaClientes.json();
+
+                exibirAgendamentos(filtroAtual);
+
+            } catch (erro) {
+
+                console.log(erro);
+                alert("Erro ao carregar os agendamentos.");
+
+            }
+        }
+
+        function filtrarAgendamentos(status) {
+            filtroAtual = status;
+            exibirAgendamentos(status);
+        }
+
+        function exibirAgendamentos(status) {
+
+            const lista = document.getElementById("listaAgendamentosAdmin");
+
+            const agendamentosFiltrados = todosAgendamentos.filter(agendamento =>
+                agendamento.status === status
+            );
+
+            if (agendamentosFiltrados.length === 0) {
+
+                if (status === "PENDENTE") {
+                    lista.innerHTML = "<p>Você não tem nenhum agendamento solicitado no momento.</p>";
+                }
+
+                if (status === "APROVADO") {
+                    lista.innerHTML = "<p>Você não tem nenhum agendamento aceito no momento.</p>";
+                }
+
+                if (status === "RECUSADO") {
+                    lista.innerHTML = "<p>Você não tem nenhum agendamento recusado no momento.</p>";
+                }
+
+                return;
+            }
+
+            lista.innerHTML = "";
+
+            agendamentosFiltrados.forEach(agendamento => {
+
+                const cliente = todosClientes.find(c => c.id === agendamento.clienteId);
+
+                const nomeCliente = cliente ? cliente.nome : "Cliente não encontrado";
+
+                let botoesDecisao = "";
+
+                if (agendamento.status === "PENDENTE") {
+                    botoesDecisao = `
+                        <div class="botoes-acoes">
+                            <button class="btn-aprovar" onclick="selecionarStatus(${agendamento.id}, 'APROVADO')">
+                                Aprovar
+                            </button>
+
+                            <button class="btn-recusar" onclick="selecionarStatus(${agendamento.id}, 'RECUSADO')">
+                                Recusar
+                            </button>
+                        </div>
+
+                        <label>Justificativa da Recusa</label>
+
+                        <textarea 
+                            id="justificativa-${agendamento.id}" 
+                            rows="3" 
+                            placeholder="Informe o motivo da recusa">${agendamento.justificativa || ""}</textarea>
+
+                        <button onclick="salvarDecisao(${agendamento.id})">
+                            Salvar Decisão
+                        </button>
+                    `;
+                }
+
+                lista.innerHTML += `
+                    <div class="historico-item">
+
+                        <p><strong>Cliente:</strong> ${nomeCliente}</p>
+                        <p><strong>Veículo:</strong> ${agendamento.tipoVeiculo}</p>
+                        <p><strong>Marca:</strong> ${agendamento.marca || "Não informado"}</p>
+                        <p><strong>Modelo:</strong> ${agendamento.modelo}</p>
+                        <p><strong>Nível de sujeira:</strong> ${agendamento.nivelSujeira}</p>
+                        <p><strong>Data:</strong> ${agendamento.data}</p>
+                        <p><strong>Horário:</strong> ${agendamento.horaInicio}</p>
+                        <p><strong>Status:</strong> <span id="status-${agendamento.id}">${agendamento.status}</span></p>
+
+                        ${agendamento.justificativa ? `<p><strong>Justificativa:</strong> ${agendamento.justificativa}</p>` : ""}
+
+                        ${botoesDecisao}
+
+                    </div>
+                `;
+
+            });
+        }
+
+        function selecionarStatus(id, status) {
+            document.getElementById(`status-${id}`).textContent = status;
+        }
+
+        async function salvarDecisao(id) {
+
+            const status = document.getElementById(`status-${id}`).textContent;
+
+            const campoJustificativa = document.getElementById(`justificativa-${id}`);
+            const justificativa = campoJustificativa ? campoJustificativa.value : "";
+
+            if (status === "RECUSADO" && justificativa.trim() === "") {
+                alert("Informe a justificativa da recusa.");
+                return;
+            }
+
+            try {
+
+                const resposta = await fetch(`http://localhost:8080/agendamentos/${id}/decisao`, {
+                    method: "PUT",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify({
+                        status: status,
+                        justificativa: justificativa
+                    })
+                });
+
+                const mensagem = await resposta.text();
+
+                alert(mensagem);
+
+                await carregarAgendamentosAdmin();
+
+            } catch (erro) {
+
+                console.log(erro);
+                alert("Erro ao salvar a decisão.");
+
+            }
+        }
+
+        function sair() {
+            sessionStorage.clear();
+            window.location.href = "login.html";
+        }
+
+        carregarAgendamentosAdmin();
+    </script>
 
 </body>
 

@@ -11,49 +11,154 @@
 
 <body>
 
-    <div class="container">
+    <div class="page-content">
 
-        <h1>Lavador do Deir</h1>
+        <div class="page-title-card">
+            <h1>Lavador do Deir</h1>
+        </div>
 
-        <h2>Área do Cliente</h2>
+        <div class="container">
 
-        <p class="info-cliente">
-            Olá, Cliente!
-        </p>
+            <h2>Área do Cliente</h2>
 
-        <!-- Exibição do contador acumulado de lavagens para o plano de fidelidade -->
-        <p class="info-cliente">
-            Total de lavadas: <strong>0</strong>
-        </p>
+            <p class="info-cliente">
+                Olá, Cliente!
+            </p>
 
-        <!-- Botão de ação rápida que direciona para o formulário de agendamentos -->
-        <button onclick="window.location.href='agendamento.html'">
-            Agende a lavada do seu veículo
-        </button>
+            <!-- Exibição do contador acumulado de lavagens para o plano de fidelidade -->
+            <p class="info-cliente">
+                Total de lavadas: <strong id="totalLavadas">0</strong>
+            </p>
 
-        <br><br>
+            <h3>Meus Agendamentos</h3>
 
-        <!-- Botão de navegação para a tela que mostra os serviços já realizados -->
-        <button onclick="window.location.href='historico.html'">
-            Histórico
-        </button>
+            <div id="listaAgendamentos">
 
-        <br><br>
+                <p>Nenhum agendamento realizado.</p>
 
-        <!-- Botão para abrir o painel de cupons de desconto ativos do usuário -->
-        <button onclick="window.location.href='cupons.html'">
-            Meus Cupons
-        </button>
+            </div>
 
-        <br><br>
+            <!-- Botão de ação rápida que direciona para o formulário de agendamentos -->
+            <button onclick="window.location.href='agendamento.html'">
+                Agende a lavada do seu veículo
+            </button>
 
-        <!-- Botão de encerramento de sessão que retorna para o login -->
-        <button onclick="window.location.href='login.html'">
-            Sair
-        </button>
+            <br><br>
+
+            <!-- Botão de navegação para a tela que mostra os serviços já realizados -->
+            <button onclick="window.location.href='historico.html'">
+                Histórico
+            </button>
+
+            <br><br>
+
+            <!-- Botão para abrir o painel de cupons de desconto ativos do usuário -->
+            <button onclick="window.location.href='cupons.html'">
+                Meus Cupons
+            </button>
+
+            <br><br>
+
+            <!-- Botão de encerramento de sessão que retorna para o login -->
+            <button onclick="sair()">
+                Sair
+            </button>
+
+        </div>
 
     </div>
 
+    <script>
+
+        async function carregarDashboard() {
+
+            const usuarioLogado = JSON.parse(sessionStorage.getItem("user"));
+
+            if (!usuarioLogado || !usuarioLogado.id) {
+                alert("Você precisa estar logado para acessar o dashboard.");
+                window.location.href = "login.html";
+                return;
+            }
+
+            document.querySelector(".info-cliente").textContent =
+                `Olá, ${usuarioLogado.nome}!`;
+
+            try {
+
+                const resposta = await fetch("http://localhost:8080/agendamentos");
+                const agendamentos = await resposta.json();
+
+                const agendamentosDoCliente = agendamentos.filter(agendamento =>
+                    agendamento.clienteId === usuarioLogado.id
+                );
+
+                const totalLavadas = agendamentosDoCliente.filter(agendamento =>
+                    agendamento.status === "APROVADO" || agendamento.status === "CONCLUIDO"
+                ).length;
+
+                document.getElementById("totalLavadas").textContent = totalLavadas;
+
+                const lista = document.getElementById("listaAgendamentos");
+
+                if (agendamentosDoCliente.length === 0) {
+
+                    lista.innerHTML =
+                        "<p>Nenhum agendamento realizado.</p>";
+
+                    return;
+                }
+
+                lista.innerHTML = "";
+
+                agendamentosDoCliente.forEach(agendamento => {
+
+                    lista.innerHTML += `
+
+                    <div class="historico-item">
+
+                        <p><strong>Veículo:</strong> ${agendamento.tipoVeiculo}</p>
+
+                        <p><strong>Marca:</strong> ${agendamento.marca || "Não informado"}</p>
+
+                        <p><strong>Modelo:</strong> ${agendamento.modelo}</p>
+
+                        <p><strong>Data:</strong> ${agendamento.data}</p>
+
+                        <p><strong>Horário:</strong> ${agendamento.horaInicio}</p>
+
+                        <p><strong>Status:</strong> ${agendamento.status}</p>
+
+                        ${agendamento.justificativa ? `<p><strong>Justificativa:</strong> ${agendamento.justificativa}</p>` : ""}
+
+                    </div>
+
+                `;
+
+                });
+
+            }
+
+            catch (erro) {
+
+                console.log(erro);
+                alert("Erro ao carregar os agendamentos.");
+
+            }
+
+        }
+
+        function sair() {
+            sessionStorage.clear();
+            window.location.href = "login.html";
+        }
+
+        carregarDashboard();
+
+    </script>
+
+    <footer class="rodape">
+        <p>Lavador do Deir, a escolha certa para manter seu veículo sempre limpo e brilhando!</p>
+    </footer>
 </body>
 
 </html>
