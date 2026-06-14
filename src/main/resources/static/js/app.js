@@ -10,6 +10,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const btnAcessoAdm = document.getElementById("btnAcessoAdm");
     const formCadastro = document.getElementById("formCadastro");
 
+    // Ativa ou desativa o modo de acesso administrativo na tela de login
     if (btnAcessoAdm) {
         btnAcessoAdm.addEventListener("click", (e) => {
             e.preventDefault();
@@ -30,16 +31,20 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     }
 
+    // Realiza o login do cliente ou do administrador
     if (formLogin) {
         formLogin.addEventListener("submit", async (e) => {
             e.preventDefault();
 
             const email = document.getElementById("email").value;
             const senha = document.getElementById("senha").value;
+
+            // Impede que um cliente comum tente acessar o sistema como administrador
             if (window.adminMode && email.toLowerCase() !== ADMIN_EMAIL) {
                 alert("Acesso negado. Este usuário não possui permissão de administrador. Desative o Acesso ADM para entrar como cliente.");
                 return;
             }
+
             try {
                 const resposta = await fetch("http://localhost:8080/clientes/login", {
                     method: "POST",
@@ -61,13 +66,16 @@ document.addEventListener("DOMContentLoaded", () => {
 
                 let role = "client";
 
+                // Define o tipo de usuário logado
                 if (window.adminMode && email.toLowerCase() === ADMIN_EMAIL) {
                     role = "admin";
                 }
 
+                // Armazena os dados do usuário na sessão do navegador
                 sessionStorage.setItem("user", JSON.stringify(usuario));
                 sessionStorage.setItem("role", role);
 
+                // Redireciona o usuário para a tela correspondente ao seu perfil
                 if (role === "admin") {
                     window.location.href = "admin.html";
                 } else {
@@ -81,6 +89,7 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     }
 
+    // Realiza o cadastro de um novo cliente
     if (formCadastro) {
         formCadastro.addEventListener("submit", async function (event) {
             event.preventDefault();

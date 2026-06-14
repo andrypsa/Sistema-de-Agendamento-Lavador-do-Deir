@@ -11,8 +11,8 @@
 	<groupId>com.lavajato</groupId>
 	<artifactId>backend</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name/>
-	<description/>
+<name>Sistema de Agendamento de Serviços</name>
+<description>Sistema web para gerenciamento de agendamentos, clientes e cupons de fidelidade de um lavador de veículos.</description>
 	<url/>
 	<licenses>
 		<license/>

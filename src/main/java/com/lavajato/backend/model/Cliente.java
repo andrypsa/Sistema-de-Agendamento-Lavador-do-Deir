@@ -1,5 +1,6 @@
 package com.lavajato.backend.model;
 
+// Representa o cliente cadastrado no sistema
 public class Cliente {
 
     private Long id;
@@ -7,6 +8,8 @@ public class Cliente {
     private String telefone;
     private String email;
     private String senha;
+
+    // Controla a quantidade de lavadas concluídas para o programa de fidelidade
     private int quantidadeLavadas;
 
     public Cliente() {

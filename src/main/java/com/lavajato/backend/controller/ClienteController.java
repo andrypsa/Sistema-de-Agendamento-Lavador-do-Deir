@@ -20,17 +20,20 @@ public class ClienteController {
 
     private final ClienteService service = new ClienteService();
 
+    // Retorna todos os clientes cadastrados
     @GetMapping
     public List<Cliente> listar() {
         return service.listar();
     }
 
+    // Recebe os dados do formulário e cadastra um novo cliente
     @PostMapping("/cadastrar")
     public String cadastrar(@RequestBody Map<String, String> dados) {
 
         try {
             Cliente cliente = new Cliente();
 
+            // Preenche o objeto Cliente com os dados recebidos do frontend
             cliente.setNome(dados.get("nome"));
             cliente.setTelefone(dados.get("telefone"));
             cliente.setEmail(dados.get("email"));
@@ -45,6 +48,7 @@ public class ClienteController {
         }
     }
 
+    // Realiza o login do cliente a partir do e-mail e senha informados
     @PostMapping("/login")
     public Cliente login(@RequestBody Map<String, String> dados) {
 

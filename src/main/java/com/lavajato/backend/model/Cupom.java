@@ -1,12 +1,17 @@
 package com.lavajato.backend.model;
 
+// Representa um cupom de desconto gerado para o cliente
 public class Cupom {
 
     private Long id;
     private String codigo;
     private Long clienteId;
     private int desconto;
+
+    // Indica se o cupom já foi utilizado pelo cliente
     private boolean utilizado;
+
+    // Datas usadas para controlar a geração e validade do cupom
     private String dataGeracao;
     private String dataValidade;
 

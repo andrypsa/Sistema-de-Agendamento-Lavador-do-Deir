@@ -14,10 +14,12 @@ public class CupomRepository {
     private static final String CAMINHO = "dados/cupons.json";
     private final ObjectMapper objectMapper = new ObjectMapper();
 
+    // Lê o arquivo JSON e retorna a lista de cupons
     public List<Cupom> listar() {
 
         File arquivo = new File(CAMINHO);
 
+        // Se o arquivo ainda não existir, retorna uma lista vazia
         if (!arquivo.exists()) {
             return new ArrayList<>();
         }
@@ -32,6 +34,7 @@ public class CupomRepository {
         }
     }
 
+    // Salva a lista de cupons no arquivo JSON
     public void salvar(List<Cupom> cupons) {
 
         try {

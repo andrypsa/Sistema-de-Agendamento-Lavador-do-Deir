@@ -4,22 +4,24 @@ import java.util.List;
 
 import com.lavajato.backend.model.Agendamento;
 import com.lavajato.backend.repository.AgendamentoRepository;
-import com.lavajato.backend.service.ClienteService;
-import com.lavajato.backend.service.CupomService;
+
 public class AgendamentoService {
 
     private final AgendamentoRepository repository = new AgendamentoRepository();
     private final ClienteService clienteService = new ClienteService();
     private final CupomService cupomService = new CupomService();
 
+    // Lista todos os agendamentos salvos no arquivo JSON
     public List<Agendamento> listar() {
         return repository.listar();
     }
 
+    // Cadastra uma nova solicitação de agendamento
     public void cadastrar(Agendamento agendamento) {
 
         List<Agendamento> agendamentos = repository.listar();
 
+        // Verifica se já existe agendamento pendente ou aprovado para a mesma data e horário
         for (Agendamento existente : agendamentos) {
 
             boolean mesmaData = existente.getData().equals(agendamento.getData());
@@ -36,6 +38,7 @@ public class AgendamentoService {
 
         long novoId = 1;
 
+        // Gera um novo ID com base no último agendamento salvo
         if (!agendamentos.isEmpty()) {
             novoId = agendamentos.get(agendamentos.size() - 1).getId() + 1;
         }
@@ -44,9 +47,11 @@ public class AgendamentoService {
 
         agendamentos.add(agendamento);
 
+        // Salva a lista atualizada de agendamentos no arquivo JSON
         repository.salvar(agendamentos);
     }
 
+    // Busca um agendamento pelo ID informado
     public Agendamento buscarPorId(Long id) {
 
         List<Agendamento> agendamentos = repository.listar();
@@ -61,6 +66,7 @@ public class AgendamentoService {
         return null;
     }
 
+    // Atualiza a decisão do administrador, aprovando ou recusando o agendamento
     public boolean atualizarDecisao(Long id, String status, String justificativa) {
 
         List<Agendamento> agendamentos = repository.listar();
@@ -81,6 +87,7 @@ public class AgendamentoService {
         return false;
     }
 
+    // Conclui um agendamento aprovado e registra a lavada no cadastro do cliente
     public String concluirAgendamento(Long id) {
 
         List<Agendamento> agendamentos = repository.listar();
@@ -89,10 +96,12 @@ public class AgendamentoService {
 
             if (agendamento.getId().equals(id)) {
 
+                // Evita concluir novamente um agendamento que já foi finalizado
                 if ("CONCLUIDO".equals(agendamento.getStatus())) {
                     return "Este agendamento já foi concluído.";
                 }
 
+                // Apenas agendamentos aprovados podem ser marcados como concluídos
                 if (!"APROVADO".equals(agendamento.getStatus())) {
                     return "Apenas agendamentos aceitos podem ser concluídos.";
                 }
@@ -100,6 +109,7 @@ public class AgendamentoService {
                 agendamento.setStatus("CONCLUIDO");
                 repository.salvar(agendamentos);
 
+                // Registra uma lavada concluída para o cliente e verifica se ele ganhou cupom
                 boolean gerouCupom = clienteService.registrarLavadaConcluida(agendamento.getClienteId());
 
                 if (gerouCupom) {

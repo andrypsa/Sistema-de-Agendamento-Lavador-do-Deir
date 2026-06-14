@@ -1,5 +1,6 @@
 package com.lavajato.backend.model;
 
+// Representa uma solicitação de agendamento feita por um cliente
 public class Agendamento {
 
     private Long id;
@@ -10,8 +11,13 @@ public class Agendamento {
     private String nivelSujeira;
     private String data;
     private String horaInicio;
+
+    // Status do agendamento: PENDENTE, APROVADO, RECUSADO ou CONCLUIDO
     private String status;
+
     private String observacao;
+
+    // Justificativa informada pelo administrador em caso de recusa
     private String justificativa;
 
     public Agendamento() {

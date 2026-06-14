@@ -21,6 +21,7 @@
 
             <h2>Painel Administrativo</h2>
 
+            <!-- Botões para filtrar os agendamentos por status e acessar os cupons -->
             <div class="filtros-admin">
                 <button onclick="filtrarAgendamentos('PENDENTE')">
                     Pendentes
@@ -43,6 +44,7 @@
                 </button>
             </div>
 
+            <!-- Área onde os agendamentos ou cupons serão exibidos dinamicamente -->
             <div id="listaAgendamentosAdmin">
                 <p>Carregando solicitações...</p>
             </div>
@@ -62,6 +64,7 @@
         let todosClientes = [];
         let filtroAtual = "PENDENTE";
 
+        // Verifica se o usuário logado tem permissão de administrador
         (function () {
             const role = sessionStorage.getItem("role");
 
@@ -70,7 +73,6 @@
                 window.location.href = "login.html";
             }
         })();
-
         async function carregarAgendamentosAdmin() {
 
             try {

@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sobre o Projeto - Lavador do Deir</title>
+    <title>Administração - Lavador do Deir</title>
 
     <link rel="stylesheet" href="../css/style.css">
 </head>
@@ -19,43 +19,352 @@
 
         <div class="container">
 
-            <h2>Sobre o Projeto</h2>
+            <h2>Painel Administrativo</h2>
 
-            <div class="historico-item">
+            <div class="filtros-admin">
+                <button onclick="filtrarAgendamentos('PENDENTE')">
+                    Pendentes
+                </button>
 
-                <p>
-                    Este sistema foi desenvolvido como parte do Projeto de Extensão I do curso de Análise e Desenvolvimento de Sistemas, com o objetivo de aplicar conhecimentos acadêmicos em uma necessidade real da comunidade local.
-                </p>
+                <button onclick="filtrarAgendamentos('APROVADO')">
+                    Aceitos
+                </button>
 
-                <p>
-                    A proposta busca apoiar o Lavador do Deir na organização dos agendamentos de lavadas, facilitando a comunicação com os clientes, o controle das solicitações e o acompanhamento dos atendimentos.
-                </p>
+                <button onclick="filtrarAgendamentos('RECUSADO')">
+                    Recusados
+                </button>
 
-                <p>
-                    O projeto contribui para a inclusão digital de um pequeno negócio local, oferecendo uma solução simples, acessível e funcional para melhorar a rotina de atendimento.
-                </p>
+                <button onclick="filtrarAgendamentos('CONCLUIDO')">
+                    Concluídos
+                </button>
 
-                <p>
-                    A solução também se relaciona aos Objetivos de Desenvolvimento Sustentável - ODS, especialmente às ODS 11, 12 e 13, ao incentivar uma gestão mais organizada, o consumo responsável de recursos e a redução de deslocamentos desnecessários.
-                </p>
-
-                <p>
-                    Projeto idealizado e desenvolvido por Andrielly Patrícia S. Araújo, acadêmica do curso de Análise e Desenvolvimento de Sistemas na Universidade Anhanguera - 3º semestre.
-                </p>
-
+                <button onclick="carregarCuponsAdmin()">
+                    Cupons
+                </button>
             </div>
 
-            <button onclick="window.location.href='login.html'">
-                Voltar
+            <div id="listaAgendamentosAdmin">
+                <p>Carregando solicitações...</p>
+            </div>
+
+            <br>
+
+            <button onclick="sair()">
+                Sair
             </button>
 
         </div>
 
     </div>
 
-    <footer class="rodape">
-        <p>Lavador do Deir, a escolha certa para manter seu veículo sempre limpo e brilhando!</p>
-    </footer>
+    <script>
+        let todosAgendamentos = [];
+        let todosClientes = [];
+        let filtroAtual = "PENDENTE";
+
+        (function () {
+            const role = sessionStorage.getItem("role");
+
+            if (role !== "admin") {
+                alert("Acesso restrito. Faça login como administrador.");
+                window.location.href = "login.html";
+            }
+        })();
+
+        async function carregarAgendamentosAdmin() {
+
+            try {
+
+                const respostaAgendamentos = await fetch("http://localhost:8080/agendamentos");
+                todosAgendamentos = await respostaAgendamentos.json();
+
+                const respostaClientes = await fetch("http://localhost:8080/clientes");
+                todosClientes = await respostaClientes.json();
+
+                exibirAgendamentos(filtroAtual);
+
+            } catch (erro) {
+
+                console.log(erro);
+                alert("Erro ao carregar os agendamentos.");
+
+            }
+        }
+
+        function filtrarAgendamentos(status) {
+            filtroAtual = status;
+            exibirAgendamentos(status);
+        }
+
+        function exibirAgendamentos(status) {
+
+            const lista = document.getElementById("listaAgendamentosAdmin");
+
+            const agendamentosFiltrados = todosAgendamentos.filter(agendamento =>
+                agendamento.status === status
+            );
+
+            if (agendamentosFiltrados.length === 0) {
+
+                if (status === "PENDENTE") {
+                    lista.innerHTML = "<p>Você não tem nenhum agendamento solicitado no momento.</p>";
+                }
+
+                if (status === "APROVADO") {
+                    lista.innerHTML = "<p>Você não tem nenhum agendamento aceito no momento.</p>";
+                }
+
+                if (status === "RECUSADO") {
+                    lista.innerHTML = "<p>Você não tem nenhum agendamento recusado no momento.</p>";
+                }
+
+                if (status === "CONCLUIDO") {
+                    lista.innerHTML = "<p>Você não tem nenhum agendamento concluído no momento.</p>";
+                }
+
+                return;
+            }
+
+            lista.innerHTML = "";
+
+            agendamentosFiltrados.forEach(agendamento => {
+
+                const cliente = todosClientes.find(c => c.id === agendamento.clienteId);
+
+                const nomeCliente = cliente ? cliente.nome : "Cliente não encontrado";
+
+                let botoesDecisao = "";
+
+                if (agendamento.status === "PENDENTE") {
+                    botoesDecisao = `
+                        <div class="botoes-acoes">
+                            <button class="btn-aprovar" onclick="selecionarStatus(${agendamento.id}, 'APROVADO')">
+                                Aprovar
+                            </button>
+
+                            <button class="btn-recusar" onclick="selecionarStatus(${agendamento.id}, 'RECUSADO')">
+                                Recusar
+                            </button>
+                        </div>
+
+                        <label>Justificativa da Recusa</label>
+
+                        <textarea 
+                            id="justificativa-${agendamento.id}" 
+                            rows="3" 
+                            placeholder="Informe o motivo da recusa">${agendamento.justificativa || ""}</textarea>
+
+                        <button onclick="salvarDecisao(${agendamento.id})">
+                            Salvar Decisão
+                        </button>
+                    `;
+                }
+
+                if (agendamento.status === "APROVADO") {
+                    botoesDecisao = `
+                        <button onclick="concluirAgendamento(${agendamento.id})">
+                            Marcar como concluído
+                        </button>
+                    `;
+                }
+
+                lista.innerHTML += `
+                    <div class="historico-item">
+
+                        <p><strong>Cliente:</strong> ${nomeCliente}</p>
+                        <p><strong>Veículo:</strong> ${agendamento.tipoVeiculo}</p>
+                        <p><strong>Marca:</strong> ${agendamento.marca || "Não informado"}</p>
+                        <p><strong>Modelo:</strong> ${agendamento.modelo}</p>
+                        <p><strong>Nível de sujeira:</strong> ${agendamento.nivelSujeira}</p>
+                        <p><strong>Data:</strong> ${agendamento.data}</p>
+                        <p><strong>Horário:</strong> ${agendamento.horaInicio}</p>
+                        <p><strong>Status:</strong> <span id="status-${agendamento.id}">${agendamento.status}</span></p>
+
+                        ${agendamento.justificativa ? `<p><strong>Justificativa:</strong> ${agendamento.justificativa}</p>` : ""}
+
+                        ${botoesDecisao}
+
+                    </div>
+                `;
+
+            });
+        }
+
+        function selecionarStatus(id, status) {
+            document.getElementById(`status-${id}`).textContent = status;
+        }
+
+        async function salvarDecisao(id) {
+
+            const status = document.getElementById(`status-${id}`).textContent;
+
+            const campoJustificativa = document.getElementById(`justificativa-${id}`);
+            const justificativa = campoJustificativa ? campoJustificativa.value : "";
+
+            if (status === "RECUSADO" && justificativa.trim() === "") {
+                alert("Informe a justificativa da recusa.");
+                return;
+            }
+
+            try {
+
+                const resposta = await fetch(`http://localhost:8080/agendamentos/${id}/decisao`, {
+                    method: "PUT",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify({
+                        status: status,
+                        justificativa: justificativa
+                    })
+                });
+
+                const mensagem = await resposta.text();
+
+                alert(mensagem);
+
+                await carregarAgendamentosAdmin();
+
+            } catch (erro) {
+
+                console.log(erro);
+                alert("Erro ao salvar a decisão.");
+
+            }
+        }
+
+        async function concluirAgendamento(id) {
+
+            const confirmar = confirm("Deseja marcar este agendamento como concluído?");
+
+            if (!confirmar) {
+                return;
+            }
+
+            try {
+
+                const resposta = await fetch(`http://localhost:8080/agendamentos/${id}/concluir`, {
+                    method: "PUT"
+                });
+
+                const mensagem = await resposta.text();
+
+                alert(mensagem);
+
+                await carregarAgendamentosAdmin();
+
+            } catch (erro) {
+
+                console.log(erro);
+                alert("Erro ao concluir o agendamento.");
+
+            }
+        }
+        async function carregarCuponsAdmin() {
+
+            try {
+
+                const respostaCupons = await fetch("http://localhost:8080/cupons");
+                const cupons = await respostaCupons.json();
+
+                const respostaClientes = await fetch("http://localhost:8080/clientes");
+                const clientes = await respostaClientes.json();
+
+                const lista = document.getElementById("listaAgendamentosAdmin");
+
+                if (cupons.length === 0) {
+                    lista.innerHTML = "<p>Nenhum cupom gerado até o momento.</p>";
+                    return;
+                }
+
+                lista.innerHTML = "";
+
+                cupons.forEach(cupom => {
+
+                    const cliente = clientes.find(c => c.id === cupom.clienteId);
+                    const nomeCliente = cliente ? cliente.nome : "Cliente não encontrado";
+
+                    let statusCupom = "Disponível";
+
+                    if (cupom.utilizado) {
+                        statusCupom = "Utilizado";
+                    }
+
+                    if (cupom.dataValidade) {
+                        const hoje = new Date();
+                        const dataValidade = new Date(cupom.dataValidade + "T23:59:59");
+
+                        if (!cupom.utilizado && hoje > dataValidade) {
+                            statusCupom = "Expirado";
+                        }
+                    }
+
+                    let botaoUtilizar = "";
+
+                    if (!cupom.utilizado && statusCupom !== "Expirado") {
+                        botaoUtilizar = `
+                    <button onclick="marcarCupomComoUtilizado(${cupom.id})">
+                        Marcar como utilizado
+                    </button>
+                `;
+                    }
+
+                    lista.innerHTML += `
+                <div class="historico-item">
+                    <p><strong>Cliente:</strong> ${nomeCliente}</p>
+                    <p><strong>Código:</strong> ${cupom.codigo}</p>
+                    <p><strong>Desconto:</strong> ${cupom.desconto}%</p>
+                    <p><strong>Status:</strong> ${statusCupom}</p>
+                    <p><strong>Data de geração:</strong> ${cupom.dataGeracao || "Não informada"}</p>
+                    <p><strong>Válido até:</strong> ${cupom.dataValidade || "Não informada"}</p>
+
+                    ${botaoUtilizar}
+                </div>
+            `;
+
+                });
+
+            } catch (erro) {
+
+                console.log(erro);
+                alert("Erro ao carregar os cupons.");
+
+            }
+        }
+
+        async function marcarCupomComoUtilizado(id) {
+
+            const confirmar = confirm("Deseja marcar este cupom como utilizado?");
+
+            if (!confirmar) {
+                return;
+            }
+
+            try {
+
+                const resposta = await fetch(`http://localhost:8080/cupons/${id}/utilizar`, {
+                    method: "PUT"
+                });
+
+                const mensagem = await resposta.text();
+
+                alert(mensagem);
+
+                carregarCuponsAdmin();
+
+            } catch (erro) {
+
+                console.log(erro);
+                alert("Erro ao marcar o cupom como utilizado.");
+
+            }
+        }
+        function sair() {
+            sessionStorage.clear();
+            window.location.href = "login.html";
+        }
+        carregarAgendamentosAdmin();
+    </script>
 
 </body>
 

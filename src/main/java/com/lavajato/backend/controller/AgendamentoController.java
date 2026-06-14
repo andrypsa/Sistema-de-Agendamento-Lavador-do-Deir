@@ -22,11 +22,13 @@ public class AgendamentoController {
 
     private final AgendamentoService service = new AgendamentoService();
 
+    // Retorna todos os agendamentos cadastrados
     @GetMapping
     public List<Agendamento> listar() {
         return service.listar();
     }
 
+    // Recebe uma nova solicitação de agendamento
     @PostMapping
     public String cadastrar(@RequestBody Agendamento agendamento) {
 
@@ -38,6 +40,7 @@ public class AgendamentoController {
         }
     }
 
+    // Atualiza a decisão do administrador, aprovando ou recusando o agendamento
     @PutMapping("/{id}/decisao")
     public String atualizarDecisao(@PathVariable Long id, @RequestBody Map<String, String> dados) {
 
@@ -53,6 +56,7 @@ public class AgendamentoController {
         return "Agendamento não encontrado.";
     }
 
+    // Marca um agendamento aprovado como concluído
     @PutMapping("/{id}/concluir")
     public String concluirAgendamento(@PathVariable Long id) {
         return service.concluirAgendamento(id);

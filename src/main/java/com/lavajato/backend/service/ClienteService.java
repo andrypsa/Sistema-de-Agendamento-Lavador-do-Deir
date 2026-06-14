@@ -9,10 +9,12 @@ public class ClienteService {
 
     private final ClienteRepository repository = new ClienteRepository();
 
+    // Lista todos os clientes cadastrados no arquivo JSON
     public List<Cliente> listar() {
         return repository.listar();
     }
 
+    // Cadastra um novo cliente no sistema
     public void cadastrar(Cliente cliente) {
 
         List<Cliente> clientes = repository.listar();
@@ -32,13 +34,17 @@ public class ClienteService {
         }
 
         cliente.setId(novoId);
+
+        // Todo cliente novo começa com zero lavadas no programa de fidelidade
         cliente.setQuantidadeLavadas(0);
 
         clientes.add(cliente);
 
+        // Salva a lista atualizada de clientes no arquivo JSON
         repository.salvar(clientes);
     }
 
+    // Valida o login do cliente a partir do e-mail e senha informados
     public Cliente login(String email, String senha) {
 
         List<Cliente> clientes = repository.listar();
@@ -55,6 +61,7 @@ public class ClienteService {
         return null;
     }
 
+    // Busca um cliente pelo e-mail
     public Cliente buscarPorEmail(String email) {
 
         List<Cliente> clientes = repository.listar();
@@ -69,6 +76,7 @@ public class ClienteService {
         return null;
     }
 
+    // Registra uma lavada concluída e verifica se o cliente atingiu 10 lavadas
     public boolean registrarLavadaConcluida(Long clienteId) {
 
         List<Cliente> clientes = repository.listar();
@@ -79,6 +87,7 @@ public class ClienteService {
 
                 int novaQuantidade = cliente.getQuantidadeLavadas() + 1;
 
+                // Ao completar 10 lavadas, zera a contagem para iniciar um novo ciclo
                 if (novaQuantidade >= 10) {
                     cliente.setQuantidadeLavadas(0);
                     repository.salvar(clientes);

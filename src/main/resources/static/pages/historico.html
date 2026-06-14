@@ -1,3 +1,4 @@
+```html
 <!DOCTYPE html>
 <html lang="pt-BR">
 
@@ -45,6 +46,7 @@
 
             const usuarioLogado = JSON.parse(sessionStorage.getItem("user"));
 
+            // Impede o acesso ao histórico caso não exista usuário logado
             if (!usuarioLogado || !usuarioLogado.id) {
                 alert("Você precisa estar logado para acessar o histórico.");
                 window.location.href = "login.html";
@@ -53,9 +55,11 @@
 
             try {
 
+                // Busca todos os agendamentos cadastrados no sistema
                 const resposta = await fetch("http://localhost:8080/agendamentos");
                 const agendamentos = await resposta.json();
 
+                // Filtra apenas os agendamentos do cliente logado que já tiveram alguma decisão
                 const historicoDoCliente = agendamentos
                     .filter(agendamento =>
                         agendamento.clienteId === usuarioLogado.id &&
@@ -76,6 +80,7 @@
 
                 lista.innerHTML = "";
 
+                // Exibe os registros do histórico, do mais recente para o mais antigo
                 historicoDoCliente.forEach(agendamento => {
 
                     lista.innerHTML += `
@@ -111,3 +116,4 @@
 </body>
 
 </html>
+```

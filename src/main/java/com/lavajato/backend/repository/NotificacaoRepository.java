@@ -14,10 +14,12 @@ public class NotificacaoRepository {
     private static final String CAMINHO = "dados/notificacoes.json";
     private final ObjectMapper objectMapper = new ObjectMapper();
 
+    // Lê o arquivo JSON e retorna a lista de notificações
     public List<Notificacao> listar() {
 
         File arquivo = new File(CAMINHO);
 
+        // Se o arquivo ainda não existir, retorna uma lista vazia
         if (!arquivo.exists()) {
             return new ArrayList<>();
         }
@@ -32,6 +34,7 @@ public class NotificacaoRepository {
         }
     }
 
+    // Salva a lista de notificações no arquivo JSON
     public void salvar(List<Notificacao> notificacoes) {
 
         try {

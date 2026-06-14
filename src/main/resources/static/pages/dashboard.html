@@ -25,7 +25,7 @@
                 Olá, Cliente!
             </p>
 
-            <!-- Exibição do contador acumulado de lavagens para o plano de fidelidade -->
+            <!-- Exibe a quantidade de lavadas concluídas para o programa de fidelidade -->
             <p class="info-cliente">
                 Total de lavadas: <strong id="totalLavadas">0</strong>
             </p>
@@ -38,28 +38,28 @@
 
             </div>
 
-            <!-- Botão de ação rápida que direciona para o formulário de agendamentos -->
+            <!-- Direciona o cliente para a tela de solicitação de agendamento -->
             <button onclick="window.location.href='agendamento.html'">
                 Agende a lavada do seu veículo
             </button>
 
             <br><br>
 
-            <!-- Botão de navegação para a tela que mostra os serviços já realizados -->
+            <!-- Direciona o cliente para o histórico de atendimentos -->
             <button onclick="window.location.href='historico.html'">
                 Histórico
             </button>
 
             <br><br>
 
-            <!-- Botão para abrir o painel de cupons de desconto ativos do usuário -->
+            <!-- Direciona o cliente para a tela de cupons disponíveis -->
             <button onclick="window.location.href='cupons.html'">
                 Meus Cupons
             </button>
 
             <br><br>
 
-            <!-- Botão de encerramento de sessão que retorna para o login -->
+            <!-- Encerra a sessão do usuário logado -->
             <button onclick="sair()">
                 Sair
             </button>
@@ -74,17 +74,20 @@
 
             const usuarioLogado = JSON.parse(sessionStorage.getItem("user"));
 
+            // Impede o acesso ao dashboard caso não exista usuário logado
             if (!usuarioLogado || !usuarioLogado.id) {
                 alert("Você precisa estar logado para acessar o dashboard.");
                 window.location.href = "login.html";
                 return;
             }
 
+            // Personaliza a saudação com o nome do cliente logado
             document.querySelector(".info-cliente").textContent =
                 `Olá, ${usuarioLogado.nome}!`;
 
             try {
 
+                // Busca os dados atualizados do cliente para exibir o total de lavadas
                 const respostaClientes = await fetch("http://localhost:8080/clientes");
                 const clientes = await respostaClientes.json();
 
@@ -97,9 +100,11 @@
                         clienteAtual.quantidadeLavadas;
                 }
 
+                // Busca todos os agendamentos cadastrados no sistema
                 const resposta = await fetch("http://localhost:8080/agendamentos");
                 const agendamentos = await resposta.json();
 
+                // Filtra apenas os agendamentos em andamento do cliente logado
                 const agendamentosDoCliente = agendamentos
                     .filter(agendamento =>
                         agendamento.clienteId === usuarioLogado.id &&
@@ -124,6 +129,7 @@
 
                 lista.innerHTML = "";
 
+                // Exibe os agendamentos encontrados na tela do cliente
                 agendamentosDoCliente.forEach(agendamento => {
 
                     lista.innerHTML += `
@@ -159,6 +165,7 @@
 
         }
 
+        // Limpa os dados da sessão e retorna para a tela de login
         function sair() {
             sessionStorage.clear();
             window.location.href = "login.html";

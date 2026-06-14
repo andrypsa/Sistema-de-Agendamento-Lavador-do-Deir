@@ -14,10 +14,12 @@ public class AgendamentoRepository {
     private static final String CAMINHO = "dados/agendamentos.json";
     private final ObjectMapper objectMapper = new ObjectMapper();
 
+    // Lê o arquivo JSON e retorna a lista de agendamentos
     public List<Agendamento> listar() {
 
         File arquivo = new File(CAMINHO);
 
+        // Se o arquivo ainda não existir, retorna uma lista vazia
         if (!arquivo.exists()) {
             return new ArrayList<>();
         }
@@ -32,6 +34,7 @@ public class AgendamentoRepository {
         }
     }
 
+    // Salva a lista de agendamentos no arquivo JSON
     public void salvar(List<Agendamento> agendamentos) {
 
         try {

@@ -1,3 +1,4 @@
+```html
 <!DOCTYPE html>
 <html lang="pt-BR">
 
@@ -23,7 +24,7 @@
             <!-- Formulário para capturar os dados do veículo e da lavagem -->
             <form id="formAgendamento">
 
-                <!-- Seleção do tipo de veículo e características -->
+                <!-- Seleção do tipo de veículo -->
                 <select id="tipoVeiculo" required>
                     <option value="">Selecione o veículo</option>
                     <option>Bicicleta</option>
@@ -38,7 +39,7 @@
                 <input type="text" id="marca" placeholder="Marca">
                 <input type="text" id="modelo" placeholder="Modelo">
 
-                <!-- Menu de seleção para classificar o estado de sujeira do veículo -->
+                <!-- Seleção do nível de sujeira do veículo -->
                 <select id="nivelSujeira" required>
                     <option value="">Nível de sujeira</option>
                     <option>Baixo</option>
@@ -46,13 +47,13 @@
                     <option>Alto</option>
                 </select>
 
-                <!-- Seção de escolha da data pretendida para o serviço -->
+                <!-- Escolha da data do agendamento -->
                 <div class="campo-data">
                     <label for="data">Data de agendamento</label>
                     <input type="date" id="data" required>
                 </div>
 
-                <!-- Menu com a listagem dos horários disponíveis para atendimento -->
+                <!-- Seleção do horário disponível para atendimento -->
                 <label for="hora">Horário de agendamento</label>
                 <select id="hora" required>
                     <option value="">Selecione o horário</option>
@@ -75,26 +76,28 @@
                     <option value="16:30">16:30</option>
                 </select>
 
-                <!-- Caixa de texto opcional para observações-->
+                <!-- Campo opcional para observações adicionais -->
                 <label for="observacao">Observações adicionais</label>
-
                 <textarea id="observacao" rows="4" placeholder=""></textarea>
 
                 <p class="aviso-valores">
                     Os valores serão informados após avaliação do veículo. Para avaliação antes do agendamento, entre em
                     contato pelo WhatsApp.
                 </p>
+
+                <!-- Abre o WhatsApp para solicitar avaliação antes do agendamento -->
                 <button type="button" onclick="abrirWhatsApp()">
                     Solicitar avaliação pelo WhatsApp
                 </button>
-                <!-- Botão de envio para enviar os dados preenchidos no formulário -->
+
+                <!-- Envia a solicitação de agendamento -->
                 <button type="submit">
                     Solicitar Agendamento
                 </button>
             </form>
             <br>
 
-            <!-- Link de navegação para retornar à tela do painel geral -->
+            <!-- Link para retornar à área do cliente -->
             <a href="dashboard.html">
                 Voltar ao Dashboard
             </a>
@@ -103,11 +106,11 @@
 
     </div>
 
-    <!-- Scripts JavaScript para validações de regras de negócio como bloqueio de datas passadas e dia de domingo-->
     <script>
         const form = document.getElementById('formAgendamento');
         const campoData = document.getElementById('data');
 
+        // Define a data mínima como a data atual, evitando agendamentos em datas passadas
         const hoje = new Date();
         const ano = hoje.getFullYear();
         const mes = String(hoje.getMonth() + 1).padStart(2, '0');
@@ -115,6 +118,7 @@
         const dataMinima = `${ano}-${mes}-${dia}`;
         campoData.min = dataMinima;
 
+        // Bloqueia agendamentos aos domingos
         campoData.addEventListener('input', function () {
             const dataSelecionada = new Date(this.value + 'T00:00:00');
             if (dataSelecionada.getDay() === 0) {
@@ -123,13 +127,14 @@
             }
         });
 
-        // Controle do envio dos dados com alertas e redirecionamento de página
+        // Envia os dados do agendamento para o backend
         form.addEventListener('submit', async function (event) {
 
             event.preventDefault();
 
             const usuarioLogado = JSON.parse(sessionStorage.getItem("user"));
 
+            // Garante que somente clientes logados possam solicitar agendamentos
             if (!usuarioLogado || !usuarioLogado.id) {
                 alert("Você precisa estar logado para solicitar um agendamento.");
                 window.location.href = "login.html";
@@ -192,6 +197,8 @@
             }
 
         });
+
+        // Abre uma conversa no WhatsApp para avaliação prévia do valor
         function abrirWhatsApp() {
             const telefone = "5564999999999";
 
@@ -206,3 +213,4 @@
 </body>
 
 </html>
+```

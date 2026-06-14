@@ -1,10 +1,13 @@
 package com.lavajato.backend.model;
 
+// Representa uma notificação enviada ao cliente
 public class Notificacao {
 
     private Long id;
     private Long clienteId;
     private String mensagem;
+
+    // Indica se a notificação já foi visualizada pelo cliente
     private boolean visualizada;
 
     public Notificacao() {

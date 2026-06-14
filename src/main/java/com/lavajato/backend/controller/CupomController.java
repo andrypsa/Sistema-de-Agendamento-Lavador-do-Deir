@@ -21,11 +21,13 @@ public class CupomController {
 
     private final CupomService service = new CupomService();
 
+    // Retorna todos os cupons cadastrados
     @GetMapping
     public List<Cupom> listar() {
         return service.listar();
     }
 
+    // Cadastra um novo cupom no sistema
     @PostMapping
     public String cadastrar(@RequestBody Cupom cupom) {
 
@@ -34,6 +36,7 @@ public class CupomController {
         return "Cupom cadastrado com sucesso!";
     }
 
+    // Marca um cupom como utilizado
     @PutMapping("/{id}/utilizar")
     public String marcarComoUtilizado(@PathVariable Long id) {
 
