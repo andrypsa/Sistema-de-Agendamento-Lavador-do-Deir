@@ -215,6 +215,20 @@ label {
     margin: 6px 0 12px 0;
 }
 
+.filtros-admin {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+    margin-top: 10px;
+    margin-bottom: 15px;
+}
+
+.filtros-admin button {
+    width: 100%;
+    padding: 9px;
+    font-size: 13px;
+}
+
 /*======================================
                RODAPÉ
 ======================================*/

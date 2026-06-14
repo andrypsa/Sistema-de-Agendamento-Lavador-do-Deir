@@ -36,7 +36,10 @@ document.addEventListener("DOMContentLoaded", () => {
 
             const email = document.getElementById("email").value;
             const senha = document.getElementById("senha").value;
-
+            if (window.adminMode && email.toLowerCase() !== ADMIN_EMAIL) {
+                alert("Acesso negado. Este usuário não possui permissão de administrador. Desative o Acesso ADM para entrar como cliente.");
+                return;
+            }
             try {
                 const resposta = await fetch("http://localhost:8080/clientes/login", {
                     method: "POST",

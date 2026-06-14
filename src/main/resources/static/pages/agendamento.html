@@ -84,7 +84,9 @@
                     Os valores serão informados após avaliação do veículo. Para avaliação antes do agendamento, entre em
                     contato pelo WhatsApp.
                 </p>
-
+                <button type="button" onclick="abrirWhatsApp()">
+                    Solicitar avaliação pelo WhatsApp
+                </button>
                 <!-- Botão de envio para enviar os dados preenchidos no formulário -->
                 <button type="submit">
                     Solicitar Agendamento
@@ -190,6 +192,15 @@
             }
 
         });
+        function abrirWhatsApp() {
+            const telefone = "5564999999999";
+
+            const mensagem = encodeURIComponent(
+                "Olá! Gostaria de agendar uma avaliação para saber o valor da lavagem."
+            );
+
+            window.open(`https://wa.me/${telefone}?text=${mensagem}`, "_blank");
+        }
     </script>
 
 </body>

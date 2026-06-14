@@ -21,7 +21,7 @@
 
             <h2>Painel Administrativo</h2>
 
-            <div class="botoes-acoes">
+            <div class="filtros-admin">
                 <button onclick="filtrarAgendamentos('PENDENTE')">
                     Pendentes
                 </button>
@@ -32,6 +32,14 @@
 
                 <button onclick="filtrarAgendamentos('RECUSADO')">
                     Recusados
+                </button>
+
+                <button onclick="filtrarAgendamentos('CONCLUIDO')">
+                    Concluídos
+                </button>
+
+                <button onclick="carregarCuponsAdmin()">
+                    Cupons
                 </button>
             </div>
 
@@ -110,6 +118,10 @@
                     lista.innerHTML = "<p>Você não tem nenhum agendamento recusado no momento.</p>";
                 }
 
+                if (status === "CONCLUIDO") {
+                    lista.innerHTML = "<p>Você não tem nenhum agendamento concluído no momento.</p>";
+                }
+
                 return;
             }
 
@@ -144,6 +156,14 @@
 
                         <button onclick="salvarDecisao(${agendamento.id})">
                             Salvar Decisão
+                        </button>
+                    `;
+                }
+
+                if (agendamento.status === "APROVADO") {
+                    botoesDecisao = `
+                        <button onclick="concluirAgendamento(${agendamento.id})">
+                            Marcar como concluído
                         </button>
                     `;
                 }
@@ -213,11 +233,136 @@
             }
         }
 
+        async function concluirAgendamento(id) {
+
+            const confirmar = confirm("Deseja marcar este agendamento como concluído?");
+
+            if (!confirmar) {
+                return;
+            }
+
+            try {
+
+                const resposta = await fetch(`http://localhost:8080/agendamentos/${id}/concluir`, {
+                    method: "PUT"
+                });
+
+                const mensagem = await resposta.text();
+
+                alert(mensagem);
+
+                await carregarAgendamentosAdmin();
+
+            } catch (erro) {
+
+                console.log(erro);
+                alert("Erro ao concluir o agendamento.");
+
+            }
+        }
+        async function carregarCuponsAdmin() {
+
+            try {
+
+                const respostaCupons = await fetch("http://localhost:8080/cupons");
+                const cupons = await respostaCupons.json();
+
+                const respostaClientes = await fetch("http://localhost:8080/clientes");
+                const clientes = await respostaClientes.json();
+
+                const lista = document.getElementById("listaAgendamentosAdmin");
+
+                if (cupons.length === 0) {
+                    lista.innerHTML = "<p>Nenhum cupom gerado até o momento.</p>";
+                    return;
+                }
+
+                lista.innerHTML = "";
+
+                cupons.forEach(cupom => {
+
+                    const cliente = clientes.find(c => c.id === cupom.clienteId);
+                    const nomeCliente = cliente ? cliente.nome : "Cliente não encontrado";
+
+                    let statusCupom = "Disponível";
+
+                    if (cupom.utilizado) {
+                        statusCupom = "Utilizado";
+                    }
+
+                    if (cupom.dataValidade) {
+                        const hoje = new Date();
+                        const dataValidade = new Date(cupom.dataValidade + "T23:59:59");
+
+                        if (!cupom.utilizado && hoje > dataValidade) {
+                            statusCupom = "Expirado";
+                        }
+                    }
+
+                    let botaoUtilizar = "";
+
+                    if (!cupom.utilizado && statusCupom !== "Expirado") {
+                        botaoUtilizar = `
+                    <button onclick="marcarCupomComoUtilizado(${cupom.id})">
+                        Marcar como utilizado
+                    </button>
+                `;
+                    }
+
+                    lista.innerHTML += `
+                <div class="historico-item">
+                    <p><strong>Cliente:</strong> ${nomeCliente}</p>
+                    <p><strong>Código:</strong> ${cupom.codigo}</p>
+                    <p><strong>Desconto:</strong> ${cupom.desconto}%</p>
+                    <p><strong>Status:</strong> ${statusCupom}</p>
+                    <p><strong>Data de geração:</strong> ${cupom.dataGeracao || "Não informada"}</p>
+                    <p><strong>Válido até:</strong> ${cupom.dataValidade || "Não informada"}</p>
+
+                    ${botaoUtilizar}
+                </div>
+            `;
+
+                });
+
+            } catch (erro) {
+
+                console.log(erro);
+                alert("Erro ao carregar os cupons.");
+
+            }
+        }
+
+        async function marcarCupomComoUtilizado(id) {
+
+            const confirmar = confirm("Deseja marcar este cupom como utilizado?");
+
+            if (!confirmar) {
+                return;
+            }
+
+            try {
+
+                const resposta = await fetch(`http://localhost:8080/cupons/${id}/utilizar`, {
+                    method: "PUT"
+                });
+
+                const mensagem = await resposta.text();
+
+                alert(mensagem);
+
+                carregarCuponsAdmin();
+
+            } catch (erro) {
+
+                console.log(erro);
+                alert("Erro ao marcar o cupom como utilizado.");
+
+            }
+        }
         function sair() {
             sessionStorage.clear();
             window.location.href = "login.html";
         }
-
         carregarAgendamentosAdmin();
     </script>
 

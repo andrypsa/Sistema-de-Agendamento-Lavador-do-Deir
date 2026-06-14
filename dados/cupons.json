@@ -1,1 +1,9 @@
-[]
+[ {
+  "id" : 1,
+  "codigo" : "9J50MC4L",
+  "clienteId" : 4,
+  "desconto" : 25,
+  "utilizado" : true,
+  "dataGeracao" : "2026-06-13",
+  "dataValidade" : "2026-07-13"
+} ]

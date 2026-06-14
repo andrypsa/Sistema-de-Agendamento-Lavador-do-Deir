@@ -52,4 +52,9 @@ public class AgendamentoController {
 
         return "Agendamento não encontrado.";
     }
+
+    @PutMapping("/{id}/concluir")
+    public String concluirAgendamento(@PathVariable Long id) {
+        return service.concluirAgendamento(id);
+    }
 }

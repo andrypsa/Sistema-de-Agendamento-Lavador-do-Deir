@@ -1,5 +1,6 @@
 package com.lavajato.backend.service;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Random;
 
@@ -30,6 +31,12 @@ public class CupomService {
             cupom.setCodigo(gerarCodigo());
         }
 
+        if (cupom.getDataGeracao() == null || cupom.getDataGeracao().isBlank()) {
+            LocalDate hoje = LocalDate.now();
+            cupom.setDataGeracao(hoje.toString());
+            cupom.setDataValidade(hoje.plusDays(30).toString());
+        }
+
         cupom.setUtilizado(false);
 
         cupons.add(cupom);
@@ -51,4 +58,34 @@ public class CupomService {
         return codigo.toString();
     }
 
+    public void gerarCupomFidelidade(Long clienteId) {
+
+        Cupom cupom = new Cupom();
+
+        cupom.setClienteId(clienteId);
+        cupom.setDesconto(25);
+        cupom.setCodigo(gerarCodigo());
+        cupom.setUtilizado(false);
+
+        cadastrar(cupom);
+    }
+
+    public boolean marcarComoUtilizado(Long id) {
+
+        List<Cupom> cupons = repository.listar();
+
+        for (Cupom cupom : cupons) {
+
+            if (cupom.getId().equals(id)) {
+
+                cupom.setUtilizado(true);
+
+                repository.salvar(cupons);
+
+                return true;
+            }
+        }
+
+        return false;
+    }
 }

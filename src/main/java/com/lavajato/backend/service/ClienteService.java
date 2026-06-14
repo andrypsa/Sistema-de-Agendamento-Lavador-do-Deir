@@ -69,4 +69,29 @@ public class ClienteService {
         return null;
     }
 
+    public boolean registrarLavadaConcluida(Long clienteId) {
+
+        List<Cliente> clientes = repository.listar();
+
+        for (Cliente cliente : clientes) {
+
+            if (cliente.getId().equals(clienteId)) {
+
+                int novaQuantidade = cliente.getQuantidadeLavadas() + 1;
+
+                if (novaQuantidade >= 10) {
+                    cliente.setQuantidadeLavadas(0);
+                    repository.salvar(clientes);
+                    return true;
+                }
+
+                cliente.setQuantidadeLavadas(novaQuantidade);
+                repository.salvar(clientes);
+
+                return false;
+            }
+        }
+
+        throw new RuntimeException("Cliente não encontrado.");
+    }
 }

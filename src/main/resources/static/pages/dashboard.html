@@ -85,25 +85,39 @@
 
             try {
 
+                const respostaClientes = await fetch("http://localhost:8080/clientes");
+                const clientes = await respostaClientes.json();
+
+                const clienteAtual = clientes.find(cliente =>
+                    cliente.id === usuarioLogado.id
+                );
+
+                if (clienteAtual) {
+                    document.getElementById("totalLavadas").textContent =
+                        clienteAtual.quantidadeLavadas;
+                }
+
                 const resposta = await fetch("http://localhost:8080/agendamentos");
                 const agendamentos = await resposta.json();
 
-                const agendamentosDoCliente = agendamentos.filter(agendamento =>
-                    agendamento.clienteId === usuarioLogado.id
-                );
-
-                const totalLavadas = agendamentosDoCliente.filter(agendamento =>
-                    agendamento.status === "APROVADO" || agendamento.status === "CONCLUIDO"
-                ).length;
-
-                document.getElementById("totalLavadas").textContent = totalLavadas;
+                const agendamentosDoCliente = agendamentos
+                    .filter(agendamento =>
+                        agendamento.clienteId === usuarioLogado.id &&
+                        agendamento.status !== "CONCLUIDO" &&
+                        agendamento.status !== "RECUSADO"
+                    )
+                    .sort((a, b) => {
+                        const dataA = new Date(`${a.data}T${a.horaInicio}`);
+                        const dataB = new Date(`${b.data}T${b.horaInicio}`);
+                        return dataA - dataB;
+                    });
 
                 const lista = document.getElementById("listaAgendamentos");
 
                 if (agendamentosDoCliente.length === 0) {
 
                     lista.innerHTML =
-                        "<p>Nenhum agendamento realizado.</p>";
+                        "<p>Nenhum agendamento em andamento.</p>";
 
                     return;
                 }
@@ -120,15 +134,13 @@
 
                         <p><strong>Marca:</strong> ${agendamento.marca || "Não informado"}</p>
 
-                        <p><strong>Modelo:</strong> ${agendamento.modelo}</p>
+                        <p><strong>Modelo:</strong> ${agendamento.modelo || "Não informado"}</p>
 
                         <p><strong>Data:</strong> ${agendamento.data}</p>
 
                         <p><strong>Horário:</strong> ${agendamento.horaInicio}</p>
 
                         <p><strong>Status:</strong> ${agendamento.status}</p>
-
-                        ${agendamento.justificativa ? `<p><strong>Justificativa:</strong> ${agendamento.justificativa}</p>` : ""}
 
                     </div>
 

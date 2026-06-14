@@ -19,29 +19,94 @@
 
         <div class="container">
 
-        <!-- Detalhes das lavadas realizadas por meio do agendamento no site -->
-        <h2>Histórico de Lavadas</h2>
+            <h2>Histórico de Lavadas</h2>
 
-        <div class="historico-item">
-            <p><strong>Data:</strong> 01/06/2026</p>
-            <p><strong>Veículo:</strong> Caminhonete S10</p>
-            <p><strong>Status:</strong> Recusado</p>
-            <p><strong>Justificativa:</strong> Horário indisponível.</p>
+            <div id="listaHistorico">
+                <p>Carregando histórico...</p>
+            </div>
+
+            <br>
+
+            <a href="dashboard.html">
+                Voltar ao Dashboard
+            </a>
+
         </div>
-        <br>
-
-        <!-- Link de navegação para retornar ao menu principal do dashboard -->
-        <a href="dashboard.html">
-            Voltar ao Dashboard
-        </a>
-
-    </div>
 
     </div>
 
     <footer class="rodape">
         <p>Lavador do Deir, a escolha certa para manter seu veículo sempre limpo e brilhando!</p>
     </footer>
+
+    <script>
+
+        async function carregarHistorico() {
+
+            const usuarioLogado = JSON.parse(sessionStorage.getItem("user"));
+
+            if (!usuarioLogado || !usuarioLogado.id) {
+                alert("Você precisa estar logado para acessar o histórico.");
+                window.location.href = "login.html";
+                return;
+            }
+
+            try {
+
+                const resposta = await fetch("http://localhost:8080/agendamentos");
+                const agendamentos = await resposta.json();
+
+                const historicoDoCliente = agendamentos
+                    .filter(agendamento =>
+                        agendamento.clienteId === usuarioLogado.id &&
+                        agendamento.status !== "PENDENTE"
+                    )
+                    .sort((a, b) => {
+                        const dataA = new Date(`${a.data}T${a.horaInicio}`);
+                        const dataB = new Date(`${b.data}T${b.horaInicio}`);
+                        return dataB - dataA;
+                    });
+
+                const lista = document.getElementById("listaHistorico");
+
+                if (historicoDoCliente.length === 0) {
+                    lista.innerHTML = "<p>Você ainda não possui histórico de lavadas.</p>";
+                    return;
+                }
+
+                lista.innerHTML = "";
+
+                historicoDoCliente.forEach(agendamento => {
+
+                    lista.innerHTML += `
+                        <div class="historico-item">
+
+                            <p><strong>Veículo:</strong> ${agendamento.tipoVeiculo}</p>
+                            <p><strong>Marca:</strong> ${agendamento.marca || "Não informado"}</p>
+                            <p><strong>Modelo:</strong> ${agendamento.modelo || "Não informado"}</p>
+                            <p><strong>Nível de sujeira:</strong> ${agendamento.nivelSujeira}</p>
+                            <p><strong>Data:</strong> ${agendamento.data}</p>
+                            <p><strong>Horário:</strong> ${agendamento.horaInicio}</p>
+                            <p><strong>Status:</strong> ${agendamento.status}</p>
+
+                            ${agendamento.justificativa ? `<p><strong>Justificativa:</strong> ${agendamento.justificativa}</p>` : ""}
+
+                        </div>
+                    `;
+
+                });
+
+            } catch (erro) {
+
+                console.log(erro);
+                alert("Erro ao carregar o histórico.");
+
+            }
+        }
+
+        carregarHistorico();
+
+    </script>
 
 </body>
 

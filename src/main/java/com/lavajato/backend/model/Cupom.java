@@ -7,16 +7,21 @@ public class Cupom {
     private Long clienteId;
     private int desconto;
     private boolean utilizado;
+    private String dataGeracao;
+    private String dataValidade;
 
     public Cupom() {
     }
 
-    public Cupom(Long id, String codigo, Long clienteId, int desconto, boolean utilizado) {
+    public Cupom(Long id, String codigo, Long clienteId, int desconto, boolean utilizado,
+                 String dataGeracao, String dataValidade) {
         this.id = id;
         this.codigo = codigo;
         this.clienteId = clienteId;
         this.desconto = desconto;
         this.utilizado = utilizado;
+        this.dataGeracao = dataGeracao;
+        this.dataValidade = dataValidade;
     }
 
     public Long getId() {
@@ -57,5 +62,21 @@ public class Cupom {
 
     public void setUtilizado(boolean utilizado) {
         this.utilizado = utilizado;
+    }
+
+    public String getDataGeracao() {
+        return dataGeracao;
+    }
+
+    public void setDataGeracao(String dataGeracao) {
+        this.dataGeracao = dataGeracao;
+    }
+
+    public String getDataValidade() {
+        return dataValidade;
+    }
+
+    public void setDataValidade(String dataValidade) {
+        this.dataValidade = dataValidade;
     }
 }
